@@ -1,16 +1,37 @@
-require("@nomiclabs/hardhat-waffle");
-require("dotenv").config({ path: ".env" });
+require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-etherscan");
+const dotenv = require("dotenv");
 
-const ALCHEMY_API_KEY_URL = process.env.ALCHEMY_API_KEY_URL;
 
-const RINKEBY_PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY;
+dotenv.config();
 
+
+/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.4",
+  solidity: "0.8.9",
+ 
   networks: {
-    rinkeby: {
-      url: ALCHEMY_API_KEY_URL,
-      accounts: [RINKEBY_PRIVATE_KEY],
-    },
+
+    skale: {
+            url: process.env.SKALE_ENDPOINT,
+           
+            accounts: [process.env.PRIVATE_KEY]
+          },
+      
   },
+  etherscan: { 
+    apiKey: {
+      skale: process.env.ETHERSCAN_API_KEY,
+    },
+    customChains: [
+      {
+        network: "skale",
+        chainId: parseInt(process.env.CHAIN_ID),
+        urls: {
+          apiURL: process.env.API_URL,
+          browserURL: process.env.BLOCKEXPLORER_URL,
+        }
+      }
+    ]
+  }
 };
